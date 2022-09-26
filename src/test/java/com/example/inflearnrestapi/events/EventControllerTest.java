@@ -1,13 +1,16 @@
 package com.example.inflearnrestapi.events;
 
+import com.example.inflearnrestapi.common.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,10 +19,16 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureRestDocs
+@Import(RestDocsConfig.class)
 @AutoConfigureMockMvc
 @SpringBootTest
 class EventControllerTest {
@@ -68,7 +77,42 @@ class EventControllerTest {
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
                 .andExpect(jsonPath("_links.self").exists())
                 .andExpect(jsonPath("_links.query-events").exists())
-                .andExpect(jsonPath("_links.update-event").exists());
+                .andExpect(jsonPath("_links.update-event").exists())
+                .andDo(document("create-event",
+                        links(
+                                linkWithRel("self").description("생성된 이벤트 링크"),
+                                linkWithRel("query-events").description("이벤트 리스트 조회 링크"),
+                                linkWithRel("update-event").description("이벤트 변경 링크")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("이벤트 이름"),
+                                fieldWithPath("description" ).description("이벤트 설명"),
+                                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
+                                fieldWithPath("location").description("이벤트 장소"),
+                                fieldWithPath("basePrice").description("이벤트 기본 가격"),
+                                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
+                                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
+                                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
+                                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
+                                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
+                        ),
+                        relaxedResponseFields(
+                                fieldWithPath("id").description("이벤트 아이디"),
+                                fieldWithPath("name").description("이벤트 이름"),
+                                fieldWithPath("description" ).description("이벤트 설명"),
+                                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
+                                fieldWithPath("location").description("이벤트 장소"),
+                                fieldWithPath("basePrice").description("이벤트 기본 가격"),
+                                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
+                                fieldWithPath("eventStatus").description("이벤트 상태"),
+                                fieldWithPath("free").description("이벤트 무료 여부"),
+                                fieldWithPath("offline").description("이벤트 오프라인 여부"),
+                                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
+                                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
+                                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
+                                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
+                        )
+                ));
     }
 
     @Test
