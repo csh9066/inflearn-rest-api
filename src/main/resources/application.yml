@@ -1,0 +1,26 @@
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  mvc:
+    static-path-pattern: /static/**
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:tcp://localhost/~/test
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rest
+    username: root
+    password: 1234

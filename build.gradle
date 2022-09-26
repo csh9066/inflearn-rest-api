@@ -42,7 +42,7 @@ dependencies {
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-//    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
@@ -60,7 +60,7 @@ asciidoctor {
 
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
-    from file("build/asciidoc")
+    from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
 }
 

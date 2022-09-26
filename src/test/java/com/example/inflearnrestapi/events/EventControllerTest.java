@@ -1,20 +1,11 @@
 package com.example.inflearnrestapi.events;
 
-import com.example.inflearnrestapi.common.RestDocsConfig;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.inflearnrestapi.common.BaseControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
@@ -27,20 +18,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@AutoConfigureRestDocs
-@Import(RestDocsConfig.class)
-@AutoConfigureMockMvc
-@SpringBootTest
-class EventControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    ModelMapper modelMapper;
+class EventControllerTest extends BaseControllerTest {
 
     @Test
     @DisplayName("이벤트 생성 - 정상이면 201 status를 반환한다.")
@@ -62,7 +40,6 @@ class EventControllerTest {
         // when
         ResultActions result = mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(eventDto))
         );
 
@@ -70,7 +47,6 @@ class EventControllerTest {
         result.andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("offline").value(false))
                 .andExpect(jsonPath("free").value(false))
