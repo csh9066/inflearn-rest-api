@@ -10,7 +10,9 @@ notification-api-docs
 [[overview]]
 = 개요
 
-[[example_curl_request]]
-== Curl request
+[[resources-e\vents-create]]
+=== 이벤트 생성
 
-operation::create-event[]
+`POST` 요청을 사용해서 새 이벤트를 만들 수 있다.
+
+operation::create-event[snippets='request-fields,curl-request,http-response,links']

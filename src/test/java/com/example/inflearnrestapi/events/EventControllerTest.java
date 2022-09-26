@@ -52,10 +52,12 @@ class EventControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("free").value(false))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
                 .andExpect(jsonPath("_links.self").exists())
+                .andExpect(jsonPath("_links.profile").exists())
                 .andExpect(jsonPath("_links.query-events").exists())
                 .andExpect(jsonPath("_links.update-event").exists())
                 .andDo(document("create-event",
                         links(
+                                linkWithRel("profile").description("문서 링크"),
                                 linkWithRel("self").description("생성된 이벤트 링크"),
                                 linkWithRel("query-events").description("이벤트 리스트 조회 링크"),
                                 linkWithRel("update-event").description("이벤트 변경 링크")
