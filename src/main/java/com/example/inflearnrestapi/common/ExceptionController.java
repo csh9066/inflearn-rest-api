@@ -26,4 +26,11 @@ public class ExceptionController {
         ErrorResponse response = new ErrorResponse("유효하지 않은 필드 입니다.", details);
         return new ErrorsModel(response);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorsModel handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        return new ErrorsModel(response);
+    }
 }

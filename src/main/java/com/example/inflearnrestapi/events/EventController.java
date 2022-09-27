@@ -1,21 +1,20 @@
 package com.example.inflearnrestapi.events;
 
-import com.example.inflearnrestapi.common.ErrorsModel;
+import com.example.inflearnrestapi.common.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -28,12 +27,11 @@ public class EventController {
 
     private final ModelMapper modelMapper;
 
-    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody @Validated EventDto eventDto) {
+    public EventModel createEvent(@RequestBody @Validated EventDto eventDto) {
         Event event = modelMapper.map(eventDto, Event.class);
-        event.update();
+        event.validate();
         eventRepository.save(event);
 
 
@@ -48,6 +46,36 @@ public class EventController {
                 .add(Link.of("/docs/index.html#resources-events-create").withRel("profile"))
                 .add(selfLinkBuilder.withSelfRel());
 
-        return ResponseEntity.created(selfLinkBuilder.toUri()).body(eventModel);
+        return eventModel;
+    }
+
+    @GetMapping
+    public PagedModel<EntityModel<Event>> getEventPages(Pageable pageable, PagedResourcesAssembler<Event> assembler) {
+        Page<Event> events = eventRepository.findAll(pageable);
+        return assembler.toModel(events);
+    }
+
+    @GetMapping("/{id}")
+    public EventModel getEvent(@PathVariable Integer id) {
+        Event event = findEvent(id);
+
+        return new EventModel(event);
+    }
+
+    @PutMapping("/{id}")
+    public EventModel updateEvent(@PathVariable Integer id, @RequestBody @Validated EventDto eventDto) {
+        Event event = findEvent(id);
+
+        modelMapper.map(eventDto, event);
+
+        eventRepository.save(event);
+
+        return new EventModel(event);
+    }
+
+    private Event findEvent(Integer id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("id가 " + id + "인 event는 존재하지 않습니다."));
+        return event;
     }
 }

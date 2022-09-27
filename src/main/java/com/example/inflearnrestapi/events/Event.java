@@ -43,7 +43,20 @@ public class Event {
 
     private LocalDateTime endEventDateTIme;
 
-    public void update() {
+    public void change(Event source) {
+        this.name = source.getName();
+        this.location = source.getLocation();
+        this.description = source.getDescription();
+        this.basePrice = source.getBasePrice();
+        this.maxPrice = source.getMaxPrice();
+        this.beginEventDateTIme = source.getBeginEventDateTIme();
+        this.closeEnrollmentDateTIme = source.getCloseEnrollmentDateTIme();
+        this.beginEventDateTIme = source.getBeginEventDateTIme();
+        this.endEventDateTIme = source.getEndEventDateTIme();
+        this.validate();
+    }
+
+    public void validate() {
         if (basePrice == 0 && maxPrice == 0) {
             this.free = true;
         } else {

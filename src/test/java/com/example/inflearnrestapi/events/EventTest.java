@@ -1,6 +1,5 @@
 package com.example.inflearnrestapi.events;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +28,7 @@ class EventTest {
                 .location("good")
                 .build();
 
-        event.update();
+        event.validate();
 
         assertThat(event.isFree()).isTrue();
     }
@@ -44,7 +43,7 @@ class EventTest {
                 .location(location)
                 .build();
 
-        event.update();
+        event.validate();
 
         assertThat(event.isOffline()).isTrue();
     }
