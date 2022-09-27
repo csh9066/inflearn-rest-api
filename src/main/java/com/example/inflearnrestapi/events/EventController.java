@@ -28,24 +28,10 @@ public class EventController {
 
     private final ModelMapper modelMapper;
 
-    private final EventValidator eventValidator;
-
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody @Validated EventDto eventDto, Errors errors) {
-        List<ObjectError> allErrors = errors.getAllErrors();
-        List<FieldError> fieldErrors = errors.getFieldErrors();
-        FieldError fieldError = errors.getFieldError();
-        if (errors.hasErrors()) {
-            return sendBadRequest(errors);
-        }
-        eventValidator.validate(eventDto, errors);
-
-        if (errors.hasErrors()) {
-            return sendBadRequest(errors);
-        }
-
+    public ResponseEntity createEvent(@RequestBody @Validated EventDto eventDto) {
         Event event = modelMapper.map(eventDto, Event.class);
         event.update();
         eventRepository.save(event);
@@ -63,10 +49,5 @@ public class EventController {
                 .add(selfLinkBuilder.withSelfRel());
 
         return ResponseEntity.created(selfLinkBuilder.toUri()).body(eventModel);
-    }
-
-    private ResponseEntity<ErrorsModel> sendBadRequest(Errors errors) {
-        ErrorsModel errorsModel = new ErrorsModel(errors.getAllErrors());
-        return ResponseEntity.badRequest().body(errorsModel);
     }
 }

@@ -94,50 +94,18 @@ class EventControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @DisplayName("이벤트 생성 - 입력 값이 받을 수 없는 값이 들어오면 400 상태 코드를 응답한다.")
+    @DisplayName("이벤트 생성 - 입력 값이 잘못된 경우 400 상태 코드를 응답한다.")
     void createEvent2() throws Exception {
         // given
-        Event source = Event.builder()
-                .id(1)
-                .free(false)
-                .offline(false)
-                .name("스프링")
-                .description("스프링을 이용해서 REST API를 학습1")
-                .beginEnrollmentDateTIme(LocalDateTime.of(2022, 9, 25, 14, 00))
-                .closeEnrollmentDateTIme(LocalDateTime.of(2022, 9, 27, 14, 00))
-                .beginEventDateTIme(LocalDateTime.of(2022, 9, 29, 16, 00))
-                .endEventDateTIme(LocalDateTime.of(2022, 9, 29, 18, 00))
-                .basePrice(100)
-                .maxPrice(200)
-                .limitOfEnrollment(100)
-                .location("nice meet A")
-                .build();
-
-        // when
-        ResultActions result = mockMvc.perform(post("/api/events")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaTypes.HAL_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(source))
-        );
-
-        // then
-        result.andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @DisplayName("이벤트 생성 - 입력 값이 잘못된 경우 400 상태 코드를 응답한다.")
-    @Test
-    void createEvent3() throws Exception {
-        // given
         EventDto source = EventDto.builder()
-                .name("스프링")
+                .name(null)
                 .description("스프링을 이용해서 REST API를 학습1")
                 .beginEnrollmentDateTIme(LocalDateTime.of(2022, 9, 25, 14, 00))
                 .closeEnrollmentDateTIme(LocalDateTime.of(2022, 9, 27, 14, 00))
                 .beginEventDateTIme(LocalDateTime.of(2022, 9, 29, 16, 00))
                 .endEventDateTIme(LocalDateTime.of(2022, 9, 28,18, 00))
-                .basePrice(100)
-                .maxPrice(200)
+                .basePrice(-300)
+                .maxPrice(-300)
                 .limitOfEnrollment(100)
                 .location("nice meet A")
                 .build();
@@ -152,11 +120,16 @@ class EventControllerTest extends BaseControllerTest {
         // then
         result.andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$[0].objectName").exists())
-                .andExpect(jsonPath("$[0].field").exists())
-                .andExpect(jsonPath("$[0].defaultMessage").exists())
-                .andExpect(jsonPath("$[0].code").exists())
-                .andExpect(jsonPath("$[0].rejectedValue").exists());
+                .andDo(document("field-error",
+                        relaxedResponseFields(
+                                fieldWithPath("message").description("에러 메시지"),
+                                fieldWithPath("errors[0].sourceName").description("자원 이름"),
+                                fieldWithPath("errors[0].fieldName").description("필드 이름"),
+                                fieldWithPath("errors[0].description").description("에러에 대한 설명")
+                        )
+                ));
     }
 
+//    @Test
+//    @DisplayName("30개의 이벤트를 10개씩 두번쨰 페이지 조회하기")
 }
