@@ -1,5 +1,6 @@
 package com.example.inflearnrestapi.events;
 
+import com.example.inflearnrestapi.accounts.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,18 +44,8 @@ public class Event {
 
     private LocalDateTime endEventDateTIme;
 
-    public void change(Event source) {
-        this.name = source.getName();
-        this.location = source.getLocation();
-        this.description = source.getDescription();
-        this.basePrice = source.getBasePrice();
-        this.maxPrice = source.getMaxPrice();
-        this.beginEventDateTIme = source.getBeginEventDateTIme();
-        this.closeEnrollmentDateTIme = source.getCloseEnrollmentDateTIme();
-        this.beginEventDateTIme = source.getBeginEventDateTIme();
-        this.endEventDateTIme = source.getEndEventDateTIme();
-        this.validate();
-    }
+    @ManyToOne
+    private Account account;
 
     public void validate() {
         if (basePrice == 0 && maxPrice == 0) {
