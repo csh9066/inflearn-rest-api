@@ -5,8 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -55,7 +54,7 @@ class AccountControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @DisplayName("회원 가입 - 이메일 중복")
+    @DisplayName("로그인")
     void login() throws Exception {
         // given
         accountService.saveAccount(new AccountDto("kimchi@naver.com", "1234"));

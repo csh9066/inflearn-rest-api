@@ -12,6 +12,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class EventController {
 
     private final ModelMapper modelMapper;
 
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EventModel createEvent(@RequestBody @Validated EventDto eventDto) {
@@ -62,6 +64,7 @@ public class EventController {
         return new EventModel(event);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
     public EventModel updateEvent(@PathVariable Integer id, @RequestBody @Validated EventDto eventDto) {
         Event event = findEvent(id);

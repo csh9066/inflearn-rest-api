@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ class EventControllerTest extends BaseControllerTest {
     private EventRepository eventRepository;
 
     @Test
+    @WithMockUser
     @DisplayName("이벤트 생성 - 정상이면 201 status를 반환한다.")
     void createEvent() throws Exception {
         // given
@@ -101,6 +103,7 @@ class EventControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("이벤트 생성 - 입력 값이 잘못된 경우 400 상태 코드를 응답한다.")
     void createEvent2() throws Exception {
         // given
@@ -197,6 +200,7 @@ class EventControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("이벤트 업데이트 - 변경된 이벤트를 응답한다.")
     void updateEvent() throws Exception {
         // given
@@ -219,6 +223,7 @@ class EventControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("이벤트 업데이트 - 이벤트가 존재하지 않으면 404를 응답한다.")
     void updateEventWhenNotExists() throws Exception {
         mockMvc.perform(put("/events/{id}", 123123)
