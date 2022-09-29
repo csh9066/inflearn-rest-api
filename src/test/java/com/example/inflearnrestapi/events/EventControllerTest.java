@@ -4,7 +4,6 @@ import com.example.inflearnrestapi.common.BaseControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
@@ -12,8 +11,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -59,18 +56,8 @@ class EventControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("offline").value(false))
                 .andExpect(jsonPath("free").value(false))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
-                .andExpect(jsonPath("_links.self").exists())
-                .andExpect(jsonPath("_links.profile").exists())
-                .andExpect(jsonPath("_links.query-events").exists())
-                .andExpect(jsonPath("_links.update-event").exists())
                 .andDo(print())
                 .andDo(document("create-event",
-                        links(
-                                linkWithRel("profile").description("문서 링크"),
-                                linkWithRel("self").description("생성된 이벤트 링크"),
-                                linkWithRel("query-events").description("이벤트 리스트 조회 링크"),
-                                linkWithRel("update-event").description("이벤트 변경 링크")
-                        ),
                         requestFields(
                                 fieldWithPath("name").description("이벤트 이름"),
                                 fieldWithPath("description").description("이벤트 설명"),
@@ -123,7 +110,6 @@ class EventControllerTest extends BaseControllerTest {
         // when
         ResultActions result = mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaTypes.HAL_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(source))
         );
 
@@ -153,11 +139,6 @@ class EventControllerTest extends BaseControllerTest {
                         .param("sort", "name,ASC")
                 )
                 .andDo(print())
-                .andExpect(jsonPath("_embedded.eventList.length()").value("10"))
-                .andExpect(jsonPath("_embedded.eventList[0].id").value(1))
-                .andExpect(jsonPath("page.size").value(10))
-                .andExpect(jsonPath("page.totalElements").value(30))
-                .andExpect(jsonPath("page.totalPages").value(3))
                 .andDo(document("query-events"));
     }
 
