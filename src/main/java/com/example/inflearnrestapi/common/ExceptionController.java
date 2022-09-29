@@ -14,7 +14,7 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public ErrorsModel handleBindException(MethodArgumentNotValidException ex) {
+    public ErrorResponse handleBindException(MethodArgumentNotValidException ex) {
         List<ErrorDetail> details = ex.getFieldErrors()
                 .stream()
                 .map(error -> new ErrorDetail(error.getObjectName(),
@@ -23,14 +23,12 @@ public class ExceptionController {
                 ))
                 .collect(Collectors.toList());
 
-        ErrorResponse response = new ErrorResponse("유효하지 않은 필드 입니다.", details);
-        return new ErrorsModel(response);
+        return new ErrorResponse("유효하지 않은 필드 입니다.", details);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public ErrorsModel handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorResponse response = new ErrorResponse(ex.getMessage());
-        return new ErrorsModel(response);
+    public ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 }
