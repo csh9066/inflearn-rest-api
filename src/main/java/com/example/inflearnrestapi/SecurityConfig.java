@@ -32,12 +32,14 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.setCharacterEncoding("UTF-8");
                     ErrorResponse errorResponse = new ErrorResponse("인증이 필요한 요청 입니다.");
                     response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
                 })
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .antMatchers("/static/docs/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
                 .anyRequest().authenticated();

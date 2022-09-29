@@ -1,5 +1,4 @@
-= Todo API
-notification-api-docs
+= 이벤트 REST API 가이드
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -10,9 +9,32 @@ notification-api-docs
 [[overview]]
 = 개요
 
-[[resources-e\vents-create]]
-=== 이벤트 생성
+[[overview-http-verbs]]
+== HTTP 동사
+
+[[resources]]
+= Resources
+
+[[resources-events-create]]
+== 이벤트 생성
 
 `POST` 요청을 사용해서 새 이벤트를 만들 수 있다.
 
-operation::create-event[snippets='request-fields,curl-request,http-response,links']
+operation::create-event[]
+
+### 요청
+//include::{snippets}/create-event/response-fields.adoc[]
+
+### 응답
+
+### 샘플
+
+#### Request
+//include::{snippets}/create-event/http-request.adoc[]
+//include::{snippets}/create-event/http-response.adoc[]
+
+//
+//
+//include::{snippets}/create-event/request-fields.adoc[]
+
+

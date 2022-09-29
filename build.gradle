@@ -46,6 +46,7 @@ dependencies {
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    // docs
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
@@ -56,10 +57,9 @@ test {
 }
 
 asciidoctor {
-    baseDirFollowsSourceDir()
+    dependsOn test
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
-    dependsOn test
 }
 
 task copyDocument(type: Copy) {
