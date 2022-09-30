@@ -1,4 +1,4 @@
-= 이벤트 REST API 가이드
+= 스프링 기반 REST API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -9,32 +9,57 @@
 [[overview]]
 = 개요
 
-[[overview-http-verbs]]
-== HTTP 동사
+[[overview_http_status_codes]]
+== HTTP status codes
+
+본 API에서 응답할 수 있는 상태코드는 다음과 같습니다.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| 성공
+
+| `201 Created`
+| 리소스 생성 완료
+
+| `400 Bad Request`
+| 사용자 요청 오류(유효하지 않은 데이터)
+
+| `404 Not Found`
+| 사용자 응답 오류(데이터 없음)
+|===
 
 [[resources]]
-= Resources
+= 이벤트
 
-[[resources-events-create]]
-== 이벤트 생성
+[[resources-create-evenets]]
+== 단건 조회
 
-`POST` 요청을 사용해서 새 이벤트를 만들 수 있다.
+`GET` 요청을 사용해서 특정 ID의 이벤트를 한개 조회 합니다.
 
-operation::create-event[]
+operation::events/get-event[snippets='http-request,response-fields,response-body']
 
-### 요청
-//include::{snippets}/create-event/response-fields.adoc[]
+[[resources-create-evenets]]
+== 리스트 조회
 
-### 응답
+`GET` 요청을 사용해서 여러개의 리스트를 조회할 수 있습니다.
 
-### 샘플
+operation::events/get-events[snippets='http-request,response-body']
 
-#### Request
-//include::{snippets}/create-event/http-request.adoc[]
-//include::{snippets}/create-event/http-response.adoc[]
+[[resources-create-evenets]]
+== 생성
 
-//
-//
-//include::{snippets}/create-event/request-fields.adoc[]
+`POST` 요청을 사용해서 새 이벤트를 만들 수 있습니다.
+
+operation::events/create-event[snippets='curl-request,request-fields,http-request,response-body']
+
+[[resources-create-evenets]]
+== 업데이트
+
+`PUT` 요청을 사용해서 기존 이벤트에 대해 변경할 수 있습니다.
+
+operation::events/update-event[snippets='curl-request,request-fields,http-request,response-body']
+
 
 

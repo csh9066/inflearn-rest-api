@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>이벤트 REST API 가이드</title>
+<title>스프링 기반 REST API 문서</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,7 +439,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>이벤트 REST API 가이드</h1>
+<h1>스프링 기반 REST API 문서</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
@@ -448,28 +448,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel0">
 <li><a href="#overview">개요</a>
 <ul class="sectlevel1">
-<li><a href="#overview-http-verbs">HTTP 동사</a></li>
+<li><a href="#overview_http_status_codes">HTTP status codes</a></li>
 </ul>
 </li>
-<li><a href="#resources">Resources</a>
+<li><a href="#resources">이벤트</a>
 <ul class="sectlevel1">
-<li><a href="#resources-events-create">이벤트 생성</a>
+<li><a href="#resources-create-evenets">단건 조회</a>
 <ul class="sectlevel2">
-<li><a href="#resources-events-create_curl_request">Curl request</a></li>
-<li><a href="#resources-events-create_http_request">HTTP request</a></li>
-<li><a href="#resources-events-create_http_response">HTTP response</a></li>
-<li><a href="#resources-events-create_httpie_request">HTTPie request</a></li>
-<li><a href="#resources-events-create_request_body">Request body</a></li>
-<li><a href="#resources-events-create_request_fields">Request fields</a></li>
-<li><a href="#resources-events-create_response_body">Response body</a></li>
-<li><a href="#resources-events-create_response_fields">Response fields</a></li>
-<li><a href="#_요청">요청</a></li>
-<li><a href="#_응답">응답</a></li>
-<li><a href="#_샘플">샘플</a>
-<ul class="sectlevel3">
-<li><a href="#_request">Request</a></li>
+<li><a href="#resources-create-evenets_http_request">HTTP request</a></li>
+<li><a href="#resources-create-evenets_response_fields">Response fields</a></li>
+<li><a href="#resources-create-evenets_response_body">Response body</a></li>
 </ul>
 </li>
+<li><a href="#resources-create-evenets">리스트 조회</a>
+<ul class="sectlevel2">
+<li><a href="#resources-create-evenets_http_request">HTTP request</a></li>
+<li><a href="#resources-create-evenets_response_body">Response body</a></li>
+</ul>
+</li>
+<li><a href="#resources-create-evenets">생성</a>
+<ul class="sectlevel2">
+<li><a href="#resources-create-evenets_curl_request">Curl request</a></li>
+<li><a href="#resources-create-evenets_request_fields">Request fields</a></li>
+<li><a href="#resources-create-evenets_http_request">HTTP request</a></li>
+<li><a href="#resources-create-evenets_response_body">Response body</a></li>
+</ul>
+</li>
+<li><a href="#resources-create-evenets">업데이트</a>
+<ul class="sectlevel2">
+<li><a href="#resources-create-evenets_curl_request">Curl request</a></li>
+<li><a href="#resources-create-evenets_request_fields">Request fields</a></li>
+<li><a href="#resources-create-evenets_http_request">HTTP request</a></li>
+<li><a href="#resources-create-evenets_response_body">Response body</a></li>
 </ul>
 </li>
 </ul>
@@ -480,20 +490,383 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <h1 id="overview" class="sect0"><a class="link" href="#overview">개요</a></h1>
 <div class="sect1">
-<h2 id="overview-http-verbs"><a class="link" href="#overview-http-verbs">HTTP 동사</a></h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<h1 id="resources" class="sect0"><a class="link" href="#resources">Resources</a></h1>
-<div class="sect1">
-<h2 id="resources-events-create"><a class="link" href="#resources-events-create">이벤트 생성</a></h2>
+<h2 id="overview_http_status_codes"><a class="link" href="#overview_http_status_codes">HTTP status codes</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>POST</code> 요청을 사용해서 새 이벤트를 만들 수 있다.</p>
+<p>본 API에서 응답할 수 있는 상태코드는 다음과 같습니다.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status code</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>200 OK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">성공</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>201 Created</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리소스 생성 완료</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 요청 오류(유효하지 않은 데이터)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 응답 오류(데이터 없음)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h1 id="resources" class="sect0"><a class="link" href="#resources">이벤트</a></h1>
+<div class="sect1">
+<h2 id="resources-create-evenets"><a class="link" href="#resources-create-evenets">단건 조회</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GET</code> 요청을 사용해서 특정 ID의 이벤트를 한개 조회 합니다.</p>
 </div>
 <div class="sect2">
-<h3 id="resources-events-create_curl_request"><a class="link" href="#resources-events-create_curl_request">Curl request</a></h3>
+<h3 id="resources-create-evenets_http_request"><a class="link" href="#resources-create-evenets_http_request">HTTP request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/events/37 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_response_fields"><a class="link" href="#resources-create-evenets_response_fields">Response fields</a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 아이디</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 설명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limitOfEnrollment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 인원 제한</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 장소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basePrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 기본 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxPrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 최대 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eventStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>free</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 무료 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>offline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 오프라인 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>closeEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 마감일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 종료일</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_response_body"><a class="link" href="#resources-create-evenets_response_body">Response body</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-none hljs">{
+  "id" : 37,
+  "name" : "event100",
+  "description" : "스프링을 이용해서 REST API를 학습1",
+  "limitOfEnrollment" : 100,
+  "eventStatus" : "DRAFT",
+  "location" : "nice meet A",
+  "basePrice" : 100,
+  "maxPrice" : 200,
+  "offline" : false,
+  "free" : false,
+  "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+  "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+  "beginEventDateTIme" : "2022-09-29T16:00:00",
+  "endEventDateTIme" : "2022-09-29T18:00:00"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resources-create-evenets"><a class="link" href="#resources-create-evenets">리스트 조회</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GET</code> 요청을 사용해서 여러개의 리스트를 조회할 수 있습니다.</p>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_http_request"><a class="link" href="#resources-create-evenets_http_request">HTTP request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/events?page=0&amp;size=10&amp;sort=name%2CASC HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_response_body"><a class="link" href="#resources-create-evenets_response_body">Response body</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-none hljs">{
+  "content" : [ {
+    "id" : 5,
+    "name" : "event0",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 6,
+    "name" : "event1",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 15,
+    "name" : "event10",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 16,
+    "name" : "event11",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 17,
+    "name" : "event12",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 18,
+    "name" : "event13",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 19,
+    "name" : "event14",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 20,
+    "name" : "event15",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 21,
+    "name" : "event16",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  }, {
+    "id" : 22,
+    "name" : "event17",
+    "description" : "스프링을 이용해서 REST API를 학습1",
+    "limitOfEnrollment" : 100,
+    "eventStatus" : "DRAFT",
+    "location" : "nice meet A",
+    "basePrice" : 100,
+    "maxPrice" : 200,
+    "offline" : false,
+    "free" : false,
+    "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+    "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+    "beginEventDateTIme" : "2022-09-29T16:00:00",
+    "endEventDateTIme" : "2022-09-29T18:00:00"
+  } ],
+  "pageable" : {
+    "sort" : {
+      "empty" : false,
+      "unsorted" : false,
+      "sorted" : true
+    },
+    "offset" : 0,
+    "pageNumber" : 0,
+    "pageSize" : 10,
+    "unpaged" : false,
+    "paged" : true
+  },
+  "last" : false,
+  "totalElements" : 30,
+  "totalPages" : 3,
+  "size" : 10,
+  "number" : 0,
+  "sort" : {
+    "empty" : false,
+    "unsorted" : false,
+    "sorted" : true
+  },
+  "numberOfElements" : 10,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resources-create-evenets"><a class="link" href="#resources-create-evenets">생성</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>POST</code> 요청을 사용해서 새 이벤트를 만들 수 있습니다.</p>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_curl_request"><a class="link" href="#resources-create-evenets_curl_request">Curl request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/events' -i -X POST \
@@ -514,7 +887,76 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="resources-events-create_http_request"><a class="link" href="#resources-events-create_http_request">HTTP request</a></h3>
+<h3 id="resources-create-evenets_request_fields"><a class="link" href="#resources-create-evenets_request_fields">Request fields</a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 설명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limitOfEnrollment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 인원 제한</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 장소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basePrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 기본 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxPrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 최대 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>closeEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 마감일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 종료일</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_http_request"><a class="link" href="#resources-create-evenets_http_request">HTTP request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/events HTTP/1.1
@@ -538,63 +980,141 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect2">
-<h3 id="resources-events-create_http_response"><a class="link" href="#resources-events-create_http_response">HTTP response</a></h3>
+<h3 id="resources-create-evenets_response_body"><a class="link" href="#resources-create-evenets_response_body">Response body</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+<pre class="highlightjs highlight nowrap"><code class="language-none hljs">{
+  "id" : 36,
+  "name" : "스프링",
+  "description" : "스프링을 이용해서 REST API를 학습1",
+  "limitOfEnrollment" : 100,
+  "eventStatus" : "DRAFT",
+  "location" : "nice meet A",
+  "basePrice" : 100,
+  "maxPrice" : 200,
+  "offline" : false,
+  "free" : false,
+  "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+  "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+  "beginEventDateTIme" : "2022-09-29T16:00:00",
+  "endEventDateTIme" : "2022-09-29T18:00:00"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resources-create-evenets"><a class="link" href="#resources-create-evenets">업데이트</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>PUT</code> 요청을 사용해서 기존 이벤트에 대해 변경할 수 있습니다.</p>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_curl_request"><a class="link" href="#resources-create-evenets_curl_request">Curl request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/events/35' -i -X PUT \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "name" : "kimchi",
+  "description" : "스프링을 이용해서 REST API를 학습1",
+  "limitOfEnrollment" : 100,
+  "location" : "nice meet b",
+  "basePrice" : 50,
+  "maxPrice" : 200,
+  "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
+  "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
+  "beginEventDateTIme" : "2022-09-29T16:00:00",
+  "endEventDateTIme" : "2022-09-29T18:00:00"
+}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_request_fields"><a class="link" href="#resources-create-evenets_request_fields">Request fields</a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 설명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limitOfEnrollment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 인원 제한</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 장소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basePrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 기본 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxPrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 최대 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>closeEnrollmentDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 마감일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>beginEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 시작일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endEventDateTIme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 종료일</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="resources-create-evenets_http_request"><a class="link" href="#resources-create-evenets_http_request">HTTP request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/events/35 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 508
+Content-Length: 400
+Host: localhost:8080
 
 {
-  "id" : 36,
-  "name" : "스프링",
+  "name" : "kimchi",
   "description" : "스프링을 이용해서 REST API를 학습1",
   "limitOfEnrollment" : 100,
-  "eventStatus" : "DRAFT",
-  "location" : "nice meet A",
-  "basePrice" : 100,
-  "maxPrice" : 200,
-  "offline" : false,
-  "free" : false,
-  "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
-  "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
-  "beginEventDateTIme" : "2022-09-29T16:00:00",
-  "endEventDateTIme" : "2022-09-29T18:00:00",
-  "account" : null
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="resources-events-create_httpie_request"><a class="link" href="#resources-events-create_httpie_request">HTTPie request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ echo '{
-  "name" : "스프링",
-  "description" : "스프링을 이용해서 REST API를 학습1",
-  "limitOfEnrollment" : 100,
-  "location" : "nice meet A",
-  "basePrice" : 100,
-  "maxPrice" : 200,
-  "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
-  "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
-  "beginEventDateTIme" : "2022-09-29T16:00:00",
-  "endEventDateTIme" : "2022-09-29T18:00:00"
-}' | http POST 'http://localhost:8080/api/events' \
-    'Content-Type:application/json;charset=UTF-8'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="resources-events-create_request_body"><a class="link" href="#resources-events-create_request_body">Request body</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-none hljs">{
-  "name" : "스프링",
-  "description" : "스프링을 이용해서 REST API를 학습1",
-  "limitOfEnrollment" : 100,
-  "location" : "nice meet A",
-  "basePrice" : 100,
+  "location" : "nice meet b",
+  "basePrice" : 50,
   "maxPrice" : 200,
   "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
   "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
@@ -605,228 +1125,26 @@ Content-Length: 508
 </div>
 </div>
 <div class="sect2">
-<h3 id="resources-events-create_request_fields"><a class="link" href="#resources-events-create_request_fields">Request fields</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-<th class="tableblock halign-left valign-top">필수 여부</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 이름</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 설명</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">limitOfEnrollment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 인원 제한</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">location</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 장소</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">basePrice</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 기본 가격</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">maxPrice</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 최대 가격</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">beginEnrollmentDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 시작일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">closeEnrollmentDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 마감일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">beginEventDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 시작일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">endEventDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 종료일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="resources-events-create_response_body"><a class="link" href="#resources-events-create_response_body">Response body</a></h3>
+<h3 id="resources-create-evenets_response_body"><a class="link" href="#resources-create-evenets_response_body">Response body</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-none hljs">{
-  "id" : 36,
-  "name" : "스프링",
+  "id" : 35,
+  "name" : "kimchi",
   "description" : "스프링을 이용해서 REST API를 학습1",
   "limitOfEnrollment" : 100,
   "eventStatus" : "DRAFT",
-  "location" : "nice meet A",
-  "basePrice" : 100,
+  "location" : "nice meet b",
+  "basePrice" : 50,
   "maxPrice" : 200,
   "offline" : false,
   "free" : false,
   "beginEnrollmentDateTIme" : "2022-09-25T14:00:00",
   "closeEnrollmentDateTIme" : "2022-09-27T14:00:00",
   "beginEventDateTIme" : "2022-09-29T16:00:00",
-  "endEventDateTIme" : "2022-09-29T18:00:00",
-  "account" : null
+  "endEventDateTIme" : "2022-09-29T18:00:00"
 }</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="resources-events-create_response_fields"><a class="link" href="#resources-events-create_response_fields">Response fields</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">필드명</th>
-<th class="tableblock halign-left valign-top">타입</th>
-<th class="tableblock halign-left valign-top">설명</th>
-<th class="tableblock halign-left valign-top">필수 여부</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 아이디</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 이름</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 설명</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">limitOfEnrollment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 인원 제한</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">location</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 장소</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">basePrice</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 기본 가격</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">maxPrice</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 최대 가격</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">eventStatus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 상태</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">free</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 무료 여부</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">offline</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 오프라인 여부</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">beginEnrollmentDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 시작일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">closeEnrollmentDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 등록 마감일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">beginEventDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 시작일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">endEventDateTIme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">이벤트 종료일</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_요청"><a class="link" href="#_요청">요청</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="_응답"><a class="link" href="#_응답">응답</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="_샘플"><a class="link" href="#_샘플">샘플</a></h3>
-<div class="sect3">
-<h4 id="_request"><a class="link" href="#_request">Request</a></h4>
-
 </div>
 </div>
 </div>
@@ -835,7 +1153,7 @@ Content-Length: 508
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-09-29 14:47:12 +0900
+Last updated 2022-09-30 13:02:55 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
