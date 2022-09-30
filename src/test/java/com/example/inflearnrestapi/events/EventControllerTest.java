@@ -18,6 +18,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -185,7 +186,7 @@ class EventControllerTest extends BaseControllerTest {
                 fieldWithPath("name").description("이벤트 이름"),
                 fieldWithPath("description").description("이벤트 설명"),
                 fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
-                fieldWithPath("location").description("이벤트 장소"),
+                fieldWithPath("location").description("이벤트 장소").optional(),
                 fieldWithPath("basePrice").description("이벤트 기본 가격"),
                 fieldWithPath("maxPrice").description("이벤트 최대 가격"),
                 fieldWithPath("eventStatus").description("이벤트 상태"),
@@ -203,7 +204,7 @@ class EventControllerTest extends BaseControllerTest {
                 fieldWithPath("name").description("이벤트 이름"),
                 fieldWithPath("description").description("이벤트 설명"),
                 fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
-                fieldWithPath("location").description("이벤트 장소"),
+                fieldWithPath("location").description("이벤트 장소").optional().attributes(key("kimchi").value("joaa")),
                 fieldWithPath("basePrice").description("이벤트 기본 가격"),
                 fieldWithPath("maxPrice").description("이벤트 최대 가격"),
                 fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
