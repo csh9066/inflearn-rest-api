@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.RequestFieldsSnippet;
+import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -57,35 +59,9 @@ class EventControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("free").value(false))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
                 .andDo(print())
-                .andDo(document("create-event",
-                        requestFields(
-                                fieldWithPath("name").description("이벤트 이름"),
-                                fieldWithPath("description").description("이벤트 설명"),
-                                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
-                                fieldWithPath("location").description("이벤트 장소"),
-                                fieldWithPath("basePrice").description("이벤트 기본 가격"),
-                                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
-                                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
-                                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
-                                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
-                                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
-                        ),
-                        relaxedResponseFields(
-                                fieldWithPath("id").description("이벤트 아이디"),
-                                fieldWithPath("name").description("이벤트 이름"),
-                                fieldWithPath("description").description("이벤트 설명"),
-                                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
-                                fieldWithPath("location").description("이벤트 장소"),
-                                fieldWithPath("basePrice").description("이벤트 기본 가격"),
-                                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
-                                fieldWithPath("eventStatus").description("이벤트 상태"),
-                                fieldWithPath("free").description("이벤트 무료 여부"),
-                                fieldWithPath("offline").description("이벤트 오프라인 여부"),
-                                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
-                                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
-                                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
-                                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
-                        )
+                .andDo(document("events/create-event",
+                        eventRequestFields(),
+                        eventResponseFields()
                 ));
     }
 
@@ -139,37 +115,22 @@ class EventControllerTest extends BaseControllerTest {
                         .param("sort", "name,ASC")
                 )
                 .andDo(print())
-                .andDo(document("query-events"));
+                .andDo(document("events/get-events"));
     }
 
     @Test
-    @DisplayName("단건 조회 - 기존의 이벤트를 하나 조회하기")
+    @DisplayName("단건 조회 - 조회한 이벤트 하나를 응답한다.")
     void getEvent() throws Exception {
         Event event = generateEvent(100);
 
         mockMvc.perform(get("/api/events/{id}", event.getId()))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("query-event",
+                .andDo(document("events/get-event",
                         pathParameters(
                                 parameterWithName("id").description("조회할 이벤트 아이디")
                         ),
-                        relaxedResponseFields(
-                                fieldWithPath("id").description("이벤트 아이디"),
-                                fieldWithPath("name").description("이벤트 이름"),
-                                fieldWithPath("description").description("이벤트 설명"),
-                                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
-                                fieldWithPath("location").description("이벤트 장소"),
-                                fieldWithPath("basePrice").description("이벤트 기본 가격"),
-                                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
-                                fieldWithPath("eventStatus").description("이벤트 상태"),
-                                fieldWithPath("free").description("이벤트 무료 여부"),
-                                fieldWithPath("offline").description("이벤트 오프라인 여부"),
-                                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
-                                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
-                                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
-                                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
-                        )
+                        eventResponseFields()
                 ));
     }
 
@@ -200,7 +161,11 @@ class EventControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("id").value(event.getId()))
                 .andExpect(jsonPath("name").value("kimchi"))
                 .andExpect(jsonPath("basePrice").value(50))
-                .andExpect(jsonPath("location").value("nice meet b"));
+                .andExpect(jsonPath("location").value("nice meet b"))
+                .andDo(document("events/update-event",
+                        eventRequestFields(),
+                        eventResponseFields()
+                ));
     }
 
     @Test
@@ -212,6 +177,40 @@ class EventControllerTest extends BaseControllerTest {
                         .content(objectMapper.writeValueAsString(aEventDto()))
                 )
                 .andExpect(status().isNotFound());
+    }
+
+    private static ResponseFieldsSnippet eventResponseFields() {
+        return responseFields(
+                fieldWithPath("id").description("이벤트 아이디"),
+                fieldWithPath("name").description("이벤트 이름"),
+                fieldWithPath("description").description("이벤트 설명"),
+                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
+                fieldWithPath("location").description("이벤트 장소"),
+                fieldWithPath("basePrice").description("이벤트 기본 가격"),
+                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
+                fieldWithPath("eventStatus").description("이벤트 상태"),
+                fieldWithPath("free").description("이벤트 무료 여부"),
+                fieldWithPath("offline").description("이벤트 오프라인 여부"),
+                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
+                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
+                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
+                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
+        );
+    }
+
+    private static RequestFieldsSnippet eventRequestFields() {
+        return requestFields(
+                fieldWithPath("name").description("이벤트 이름"),
+                fieldWithPath("description").description("이벤트 설명"),
+                fieldWithPath("limitOfEnrollment").description("이벤트 등록 인원 제한"),
+                fieldWithPath("location").description("이벤트 장소"),
+                fieldWithPath("basePrice").description("이벤트 기본 가격"),
+                fieldWithPath("maxPrice").description("이벤트 최대 가격"),
+                fieldWithPath("beginEnrollmentDateTIme").description("이벤트 등록 시작일"),
+                fieldWithPath("closeEnrollmentDateTIme").description("이벤트 등록 마감일"),
+                fieldWithPath("beginEventDateTIme").description("이벤트 시작일"),
+                fieldWithPath("endEventDateTIme").description("이벤트 종료일")
+        );
     }
 
     private EventDto aEventDto() {

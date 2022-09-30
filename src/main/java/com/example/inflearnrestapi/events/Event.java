@@ -44,8 +44,8 @@ public class Event {
 
     private LocalDateTime endEventDateTIme;
 
-    @ManyToOne
-    private Account account;
+//    @ManyToOne
+//    private Account account;
 
     public void validate() {
         if (basePrice == 0 && maxPrice == 0) {
